@@ -1,0 +1,55 @@
+name: Check Munich wastewater
+
+on:
+  schedule:
+    # 05:00 UTC = 07:00 Berlin (summer) / 06:00 (winter). New readings appear ~weekly.
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Treat the current reading as new (for testing the notification path)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: wastewater-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Poll the LGL endpoint
+        id: check
+        run: python3 check.py ${{ inputs.force && '--force' || '' }}
+
+      - name: Commit history, feed and page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data docs
+          # docs/ is regenerated every run, so most days there is genuinely nothing to commit
+          if git diff --staged --quiet; then
+            echo "nothing changed"
+          else
+            git commit -m "Munich SARS-CoV-2${{ steps.check.outputs.sample_date && format(': sample {0}', steps.check.outputs.sample_date) || ': regenerate feed' }}"
+            git push
+          fi
+
+      - name: Open an issue (GitHub emails it to you)
+        if: steps.check.outputs.new_data == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: ${{ steps.check.outputs.title }}
+          BODY: ${{ steps.check.outputs.body }}
+        run: |
+          # --force makes label creation idempotent, so a fresh repo cannot fail here
+          gh label create wastewater --color 0E8A16 \
+            --description "Neue Abwasser-Messung" --force
+          gh issue create --title "$TITLE" --body "$BODY" --label wastewater
