@@ -48,9 +48,20 @@ gh repo create niowaste --public --source=. --push
 gh workflow run check.yml
 ```
 
-That is the whole setup. The workflow enables GitHub Pages itself
-(`actions/configure-pages` with `enablement: true`), so there is nothing to click in Settings.
-Set the repo to **Watch → All Activity** so the notification issues reach your inbox.
+On a repo where Pages has never been turned on, that is the whole setup:
+`actions/configure-pages` runs with `enablement: true` and switches it on by itself.
+
+**If Pages was already enabled in "Deploy from a branch" mode, that is not enough.**
+`enablement: true` only enables Pages when it is off — it will not repoint a site that is
+already on. The symptom is deceptive: the `Deploy to GitHub Pages` step goes green while the
+branch build is still what actually serves the site. Repoint it once, by hand:
+
+```bash
+gh api -X PUT repos/<owner>/niowaste/pages -f build_type=workflow
+gh api repos/<owner>/niowaste/pages --jq .build_type   # must print: workflow
+```
+
+Then set the repo to **Watch → All Activity** so the notification issues reach your inbox.
 
 The repo is public because GitHub Pages on a free account requires it. The data is already
 public, so nothing sensitive is exposed.

@@ -30,8 +30,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # enablement:true turns Pages on by itself, so there is nothing to click in Settings.
-      # If this ever fails, check.py falls back to deriving the URL from the repo name and the
+      # enablement:true turns Pages on when it is off, but it will NOT repoint a site already
+      # set to "deploy from a branch" — that needs a one-off
+      #   gh api -X PUT repos/<owner>/<repo>/pages -f build_type=workflow
+      # otherwise the deploy step below goes green while the branch build still serves the site.
+      # If this step fails, check.py falls back to deriving the URL from the repo name and the
       # notification still goes out — hence continue-on-error.
       - name: Configure Pages
         id: pages
