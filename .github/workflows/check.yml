@@ -14,6 +14,8 @@ on:
 permissions:
   contents: write
   issues: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: wastewater-check
@@ -22,12 +24,25 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
+      # enablement:true turns Pages on by itself, so there is nothing to click in Settings.
+      # If this ever fails, check.py falls back to deriving the URL from the repo name and the
+      # notification still goes out — hence continue-on-error.
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+        with:
+          enablement: true
+
       - name: Poll the LGL endpoint
         id: check
-        run: python3 check.py ${{ inputs.force && '--force' || '' }}
+        run: python3 check.py --site-url "${{ steps.pages.outputs.base_url }}" ${{ inputs.force && '--force' || '' }}
 
       - name: Commit history, feed and page
         run: |
@@ -42,6 +57,7 @@ jobs:
             git push
           fi
 
+      # The notification runs before the Pages steps: a publishing hiccup must never swallow it.
       - name: Open an issue (GitHub emails it to you)
         if: steps.check.outputs.new_data == 'true'
         env:
@@ -53,3 +69,14 @@ jobs:
           gh label create wastewater --color 0E8A16 \
             --description "Neue Abwasser-Messung" --force
           gh issue create --title "$TITLE" --body "$BODY" --label wastewater
+
+      # Publishing happens inside this run rather than relying on the push to main triggering a
+      # separate Pages build — a GITHUB_TOKEN push is not a dependable trigger. Unconditional,
+      # so the live feed can never drift from the committed one.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

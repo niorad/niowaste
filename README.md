@@ -41,10 +41,30 @@ docs/index.html    small readable page, regenerated from the CSV ┘ GitHub Page
 reproducible. Entry IDs are derived from the sample date, so re-generating the feed never
 re-notifies your reader.
 
+## Setup
+
+```bash
+gh repo create niowaste --public --source=. --push
+gh workflow run check.yml
+```
+
+That is the whole setup. The workflow enables GitHub Pages itself
+(`actions/configure-pages` with `enablement: true`), so there is nothing to click in Settings.
+Set the repo to **Watch → All Activity** so the notification issues reach your inbox.
+
+The repo is public because GitHub Pages on a free account requires it. The data is already
+public, so nothing sensitive is exposed.
+
 ## Notifications
 
 - **Atom feed** — subscribe to `https://<owner>.github.io/niowaste/feed.xml` in NetNewsWire,
   Reeder, or any reader, on both macOS and iOS.
+
+  The feed is published **from inside the workflow run** (`upload-pages-artifact` +
+  `deploy-pages`), not by relying on the bot's push to `main` to trigger a separate Pages
+  build — a `GITHUB_TOKEN` push is not a dependable trigger. The deploy is unconditional, so
+  the live feed can never drift from the committed one. Opening an issue is a separate,
+  later step: the feed updates whether or not any notification is sent.
 - **Email** — the workflow opens a GitHub issue, and GitHub's own notification email delivers
   it. No SMTP server, no app password, no secrets. Make sure the repo is set to
   **Watch → All Activity** and that email notifications are enabled in your GitHub settings.
@@ -88,9 +108,6 @@ GitHub disables scheduled workflows in public repos after 60 days of no reposito
 emailing the owner first. The workflow's own commits count as activity, so in practice this
 should not fire — but if the LGL publishes nothing for two months, expect that email and
 re-enable with one click.
-
-The repo is public because GitHub Pages on a free account requires it. The data is already
-public, so nothing sensitive is exposed.
 
 ## Data
 
