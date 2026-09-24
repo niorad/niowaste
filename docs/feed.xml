@@ -3,13 +3,21 @@
   <title>München · SARS-CoV-2 im Abwasser</title>
   <subtitle>Wöchentliche Virusaktivität für München, Quelle: LGL Bayern</subtitle>
   <id>tag:bay-voc.lgl.bayern.de,2026:muenchen:sarscov2:feed</id>
-  <updated>2026-09-17T09:52:41+00:00</updated>
+  <updated>2026-09-24T09:45:48+00:00</updated>
   <link href="https://niorad.github.io/niowaste/feed.xml" rel="self" type="application/atom+xml" />
   <link href="https://bay-voc.lgl.bayern.de/abwassermonitoring" rel="alternate" type="text/html" />
   <author>
     <name>Bayerisches Landesamt für Gesundheit und Lebensmittelsicherheit</name>
   </author>
   <rights>Daten: LGL Bayern. Feed erzeugt von niowaste.</rights>
+  <entry>
+    <title>KW 39 · Niedrig · 0,7736 · leicht ansteigend +11,57 %</title>
+    <id>tag:bay-voc.lgl.bayern.de,2026-09-21:muenchen:sarscov2</id>
+    <updated>2026-09-24T09:45:48+00:00</updated>
+    <published>2026-09-21T12:00:00+02:00</published>
+    <link href="https://bay-voc.lgl.bayern.de/abwassermonitoring" rel="alternate" type="text/html" />
+    <content type="html">&lt;p&gt;Neue Messung für &lt;strong&gt;München&lt;/strong&gt; (SARS-CoV-2), Probe vom 21.09.2026.&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Virusaktivität: &lt;strong&gt;Niedrig&lt;/strong&gt;&lt;/li&gt;&lt;li&gt;Wochenwert: 0,7736&lt;/li&gt;&lt;li&gt;Kalenderwoche: 39&lt;/li&gt;&lt;li&gt;Trend: leicht ansteigend +11,57 %&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;&lt;a href="https://bay-voc.lgl.bayern.de/abwassermonitoring"&gt;Zum Dashboard des LGL Bayern&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>KW 38 · Sehr niedrig · 0,1581 · leicht ansteigend +5,47 %</title>
     <id>tag:bay-voc.lgl.bayern.de,2026-09-14:muenchen:sarscov2</id>
