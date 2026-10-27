@@ -9,3 +9,4 @@ sample_date,iso_week,wval,category,trend,percent_change,fetched_at
 2026-10-12,42,1.9771977239800549,Hoch,ansteigend,"+16,25 %",2026-10-15T09:40:20+00:00
 2026-10-14,42,1.9727539766246593,Moderat,leicht ansteigend,"+13,36 %",2026-10-17T09:04:10+00:00
 2026-10-19,43,1.608418122897291,Moderat,leicht ansteigend,"+11,51 %",2026-10-26T10:49:40+00:00
+2026-10-21,43,1.7940100021293688,Moderat,leicht ansteigend,"+11,51 %",2026-10-27T10:15:39+00:00
